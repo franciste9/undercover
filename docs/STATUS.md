@@ -10,7 +10,7 @@ The pilot, built phase by phase from `docs/PLAN.md`.
   - The rules: a payout over $1,000 waits for a handler's sign-off, a payment must equal the approved payout, and a claim pays once.
   - `get_instructions` serves `backend/instructions.md`, which is the agent's system prompt. `run_claim` starts the agent on a claim in the background.
 - `agent/`: `run(claim_id, thread_id)` works a claim from reading it to deciding it, through the API alone. Six tools: `get_claim`, `get_policy`, `get_claim_history`, `get_policy_wording`, `decide_claim` and `pay_claim`. Each one records a step, so the dashboard can follow the run.
-- `dashboard/`: still the one page that shows whether the backend is up.
+- `dashboard/`: the queue in UnderCover's brand, light and dark. Every claim with its stage, decision and payout, a filter by stage, a "Run agent" button on a waiting claim, and a refresh every two seconds.
 - `e2e/`: one test of that page.
 
 ## Running it

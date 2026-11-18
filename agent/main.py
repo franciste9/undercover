@@ -29,10 +29,9 @@ def backend() -> httpx.Client:
 
 
 def fetch(path: str) -> Any:
-    """Read from the backend."""
+    """Read from the backend and return its answer, refusal and all."""
     with backend() as client:
         response = client.get(path)
-    response.raise_for_status()
     return response.json()
 
 
@@ -55,23 +54,24 @@ def money(amount: float) -> str:
 
 @tool
 def get_claim(claim_id: str) -> dict[str, Any]:
-    """Read a claim: the customer's story, the items claimed and the documents."""
+    """Read a claim such as CLM-1001: the story, the items and the documents."""
     record(f"Read claim {claim_id}")
     return fetch(f"/api/claims/{claim_id}")
 
 
 @tool
 def get_policy(policy_id: str) -> dict[str, Any]:
-    """Read a policy: the plan's limits, the add-ons, the trip and the travelers."""
+    """Read a policy such as POL-2001: the plan's limits, add-ons and trip."""
     record(f"Read policy {policy_id}")
     return fetch(f"/api/policies/{policy_id}")
 
 
 @tool
-def get_claim_history(customer_id: str) -> list[dict[str, Any]]:
-    """Read what this customer has claimed before."""
+def get_claim_history(customer_id: str) -> Any:
+    """Read what a customer, such as CUS-3001, has claimed before."""
     record(f"Read the claim history of {customer_id}")
-    return fetch(f"/api/customers/{customer_id}")["previous_claims"]
+    customer = fetch(f"/api/customers/{customer_id}")
+    return customer.get("previous_claims", customer)
 
 
 @tool

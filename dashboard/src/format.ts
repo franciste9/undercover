@@ -1,0 +1,30 @@
+import type { Outcome, Stage } from "./api";
+
+export const STAGES: Record<Stage, string> = {
+  waiting: "Waiting",
+  in_progress: "In progress",
+  awaiting_signoff: "Waiting for sign-off",
+  decided: "Decided",
+};
+
+export const OUTCOMES: Record<Outcome, string> = {
+  approve: "Approved",
+  decline: "Declined",
+  refer: "Referred",
+};
+
+export function money(amount: number): string {
+  return amount.toLocaleString("en-US", { style: "currency", currency: "USD" });
+}
+
+export function words(value: string): string {
+  const spaced = value.replace(/_/g, " ");
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+}
+
+export function when(timestamp: string): string {
+  return new Date(timestamp).toLocaleString("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}

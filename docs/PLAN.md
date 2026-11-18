@@ -154,13 +154,13 @@ The team gets the queue, in UnderCover's brand.
 
 **Success criteria**
 
-- [ ] `npx vitest run --root dashboard --coverage` passes with statements at or above 80%
-- [ ] In the Playwright MCP browser at `http://localhost:5173`: 25 rows, every stage chip in its brand color (waiting Cerulean, in progress Marigold, waiting for sign-off Coral, decided Sea Green), money as `$420.00`
-- [ ] Filtering to "Waiting for sign-off" shows only the claims awaiting a sign-off, and clearing the filter brings all 25 back
-- [ ] "Run agent" on a waiting claim turns it to "In progress" in the queue without a reload
-- [ ] `document.fonts.check('16px "Instrument Sans"')` is true in the browser, and headings use it
-- [ ] The page in dark mode (`browser_emulate_media` with `colorScheme: dark`) has the `#04232E` background and readable text, checked by screenshot
-- [ ] No borders on one edge of a panel and no line across the top of the page, checked by screenshot against `docs/BRAND.md`
+- [x] `npx vitest run --root dashboard --coverage` passes with statements at or above 80%
+- [x] In the Playwright MCP browser at `http://localhost:5173`: 25 rows, every stage chip in its brand color (waiting Cerulean, in progress Marigold, waiting for sign-off Coral, decided Sea Green), money as `$420.00`
+- [x] Filtering to "Waiting for sign-off" shows only the claims awaiting a sign-off, and clearing the filter brings all 25 back
+- [x] "Run agent" on a waiting claim turns it to "In progress" in the queue without a reload
+- [x] `document.fonts.check('16px "Instrument Sans"')` is true in the browser, and headings use it
+- [x] The page in dark mode (`browser_emulate_media` with `colorScheme: dark`) has the `#04232E` background and readable text, checked by screenshot
+- [x] No borders on one edge of a panel and no line across the top of the page, checked by screenshot against `docs/BRAND.md`
 
 ## Phase 5: the claim page, the live steps and the sign-off
 

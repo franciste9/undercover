@@ -177,3 +177,26 @@ def test_the_command_line_works_the_whole_queue(monkeypatch, capsys):
     monkeypatch.setattr(main, "run", lambda claim_id, thread_id: "decided it")
     main.main()
     assert capsys.readouterr().out.count("decided it") == 25
+
+
+def test_a_tool_called_with_the_wrong_id_does_not_stop_the_run():
+    reply = main.run(
+        "CLM-1001",
+        "thread-6",
+        stub(
+            call("get_claim_history", customer_id="CLM-1001"),
+            call("get_claim_history", customer_id="CUS-3001"),
+            call(
+                "decide_claim",
+                claim_id="CLM-1001",
+                outcome="refer",
+                payout=0.0,
+                reason="The documents do not settle how long the delay ran.",
+                policy_section="Section 3: Trip Delay",
+            ),
+            AIMessage(content="I referred the claim."),
+        ),
+    )
+    assert reply == "I referred the claim."
+    assert client.get("/api/claims/CLM-1001").json()["outcome"] == "refer"
+    assert steps("CLM-1001")[0] == "Read the claim history of CLM-1001"
