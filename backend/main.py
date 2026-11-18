@@ -2,9 +2,11 @@
 
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from uuid import uuid4
 
-from fastapi import FastAPI, HTTPException
+from fastapi import BackgroundTasks, FastAPI, HTTPException
 
+from agent.main import run
 from backend import db, seed, store
 from backend.models import (
     Claim,
@@ -15,6 +17,7 @@ from backend.models import (
     Payment,
     Policy,
     QueueClaim,
+    Run,
     SignOff,
     StartClaim,
     Step,
@@ -88,6 +91,12 @@ def get_policy_wording() -> Text:
     return Text(text=store.policy_wording())
 
 
+@app.get("/api/instructions", operation_id="get_instructions")
+def get_instructions() -> Text:
+    """Return the agent's instructions."""
+    return Text(text=store.instructions())
+
+
 @app.get("/api/handlers", operation_id="list_handlers")
 def list_handlers() -> list[Handler]:
     """List UnderCover's claims handlers."""
@@ -122,7 +131,7 @@ def stop_claim(claim_id: str) -> Claim:
 def add_step(claim_id: str, body: NewStep) -> Step:
     """Record one line of what the agent is doing on a claim."""
     claim = claim_or_404(claim_id)
-    if claim.stage != "in_progress":
+    if claim.stage == "waiting":
         raise HTTPException(409, f"{claim_id} is not in progress")
     return store.add_step(claim_id, body.step)
 
@@ -178,3 +187,14 @@ def pay_claim(claim_id: str, payment: Payment) -> Claim:
         raise HTTPException(409, f"{claim_id} waits for a handler's sign-off")
     store.pay(claim_id, payment.amount)
     return claim_or_404(claim_id)
+
+
+@app.post("/api/claims/{claim_id}/run", operation_id="run_claim", status_code=202)
+def run_claim(claim_id: str, tasks: BackgroundTasks) -> Run:
+    """Start the agent on a claim and return while it works."""
+    claim = claim_or_404(claim_id)
+    if claim.stage == "in_progress":
+        raise HTTPException(409, f"{claim_id} is already in progress")
+    thread_id = str(uuid4())
+    tasks.add_task(run, claim_id, thread_id)
+    return Run(claim_id=claim_id, thread_id=thread_id)

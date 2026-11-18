@@ -22,6 +22,7 @@ from backend.models import (
 
 DATA = Path(__file__).resolve().parent.parent / "data"
 WORDING = DATA / "policy_wording.md"
+INSTRUCTIONS = Path(__file__).resolve().parent / "instructions.md"
 
 QUEUE = """
 SELECT c.*, u.name AS customer_name
@@ -126,6 +127,11 @@ def list_handlers() -> list[Handler]:
 def policy_wording() -> str:
     """Return the policy wording."""
     return WORDING.read_text()
+
+
+def instructions() -> str:
+    """Return the agent's instructions."""
+    return INSTRUCTIONS.read_text()
 
 
 def now() -> str:

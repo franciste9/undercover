@@ -135,16 +135,16 @@ The agent works a claim end to end, through the API alone.
 
 **Success criteria**
 
-- [ ] Tests with a stub model cover a full run: the claim starts, steps are recorded, the decision is saved, and the final reply comes back. No test calls a model
-- [ ] A stub-model test of the block: the agent approves 2,340 and tries to pay it; the payment is refused, the claim is `awaiting_signoff` and unpaid, and the refusal reaches the agent
-- [ ] A test asserts the agent only reads through the API: `grep -rn "data/\|open(" agent/*.py` finds nothing
-- [ ] `uv run -m agent.main CLM-1001` against the real model decides the claim; `curl -s localhost:8000/api/claims/CLM-1001 | jq '{stage, outcome, payout, reason, policy_section}'` shows an outcome, a payout, a reason of two or three sentences and a section of the wording
-- [ ] `curl -s localhost:8000/api/claims/CLM-1001/steps | jq -r '.[].step'` lists the reads and the decision in the order the agent did them
-- [ ] A real run on a claim the agent approves above $1,000 ends `awaiting_signoff` and unpaid, and the agent's reply says the payment waits for a handler
-- [ ] `POST /api/claims/CLM-1013/run` returns 202 with a thread id, and the claim reaches a decision while I poll `get_claim`
-- [ ] A run whose model call fails leaves the claim `waiting` with a step that says the run stopped (tested with a stub that raises)
-- [ ] `MODEL_NAME=openrouter/free uv run -m agent.main CLM-1023` decides the claim, so the free route works
-- [ ] `uv run pytest -q` passes with coverage at or above 80%
+- [x] Tests with a stub model cover a full run: the claim starts, steps are recorded, the decision is saved, and the final reply comes back. No test calls a model
+- [x] A stub-model test of the block: the agent approves 2,340 and tries to pay it; the payment is refused, the claim is `awaiting_signoff` and unpaid, and the refusal reaches the agent
+- [x] A test asserts the agent only reads through the API: `grep -rn "data/\|open(" agent/*.py` finds nothing
+- [x] `uv run -m agent.main CLM-1001` against the real model decides the claim; `curl -s localhost:8000/api/claims/CLM-1001 | jq '{stage, outcome, payout, reason, policy_section}'` shows an outcome, a payout, a reason of two or three sentences and a section of the wording
+- [x] `curl -s localhost:8000/api/claims/CLM-1001/steps | jq -r '.[].step'` lists the reads and the decision in the order the agent did them
+- [x] A real run on a claim the agent approves above $1,000 ends `awaiting_signoff` and unpaid, and the agent's reply says the payment waits for a handler
+- [x] `POST /api/claims/CLM-1013/run` returns 202 with a thread id, and the claim reaches a decision while I poll `get_claim`
+- [x] A run whose model call fails leaves the claim `waiting` with a step that says the run stopped (tested with a stub that raises)
+- [x] `MODEL_NAME=openrouter/free uv run -m agent.main CLM-1023` decides the claim, so the free route works
+- [x] `uv run pytest -q` passes with coverage at or above 80%
 
 ## Phase 4: the dashboard shell and the queue
 

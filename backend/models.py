@@ -168,3 +168,8 @@ class SignOff(BaseModel):
 
 class Payment(BaseModel):
     amount: float
+
+
+class Run(BaseModel):
+    claim_id: str
+    thread_id: str
