@@ -186,13 +186,13 @@ The whole product checked the way the team will use it.
 
 **Success criteria**
 
-- [ ] `npm run e2e` passes, and the specs above all appear in the output
-- [ ] The end-to-end run leaves `backend/undercover.db` untouched: the queue in `npm run dev` is as it was
-- [ ] `npm run check` is green end to end, with the output pasted into my report
-- [ ] A real run over five claims, including CLM-1003 and CLM-1012, from the command line: every claim ends `decided` or `awaiting_signoff`, each with a payout, a reason and a section, reported as a table
-- [ ] A handler's path in the browser once more: queue, open an approved claim over the limit, sign off, pay, see it paid
-- [ ] `docs/STATUS.md` describes the pilot, the API, the seed command and how to run the agent
-- [ ] Every box in this plan is ticked, with one commit per phase
+- [x] `npm run e2e` passes, and the specs above all appear in the output
+- [x] The end-to-end run leaves `backend/undercover.db` untouched: the queue in `npm run dev` is as it was
+- [x] `npm run check` is green end to end, with the output pasted into my report
+- [x] A real run over five claims, including CLM-1003 and CLM-1012, from the command line: every claim ends `decided` or `awaiting_signoff`, each with a payout, a reason and a section, reported as a table
+- [x] A handler's path in the browser once more: queue, open an approved claim over the limit, sign off, pay, see it paid
+- [x] `docs/STATUS.md` describes the pilot, the API, the seed command and how to run the agent
+- [x] Every box in this plan is ticked, with one commit per phase
 
 ## What the pilot does not build
 
