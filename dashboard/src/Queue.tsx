@@ -74,7 +74,9 @@ export function Queue() {
         <tbody>
           {shown.map((claim) => (
             <tr key={claim.claim_id}>
-              <td className="id">{claim.claim_id}</td>
+              <td className="id">
+                <a href={`#/claims/${claim.claim_id}`}>{claim.claim_id}</a>
+              </td>
               <td>{claim.customer_name}</td>
               <td>{words(claim.claim_type)}</td>
               <td className="amount">{money(claim.amount_claimed)}</td>

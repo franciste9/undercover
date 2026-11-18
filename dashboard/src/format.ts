@@ -28,3 +28,17 @@ export function when(timestamp: string): string {
     timeStyle: "short",
   });
 }
+
+export function clock(timestamp: string): string {
+  return new Date(timestamp).toLocaleTimeString("en-US", {
+    timeStyle: "medium",
+  });
+}
+
+export function hours(count: number): string {
+  return `${count.toString()} hours`;
+}
+
+export function said(reason: unknown): string {
+  return reason instanceof Error ? reason.message : String(reason);
+}

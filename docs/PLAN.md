@@ -170,13 +170,13 @@ Everything the spec asks the team to see, on one page.
 
 **Success criteria**
 
-- [ ] `npx vitest run --root dashboard --coverage` passes with statements at or above 80%
-- [ ] In the Playwright MCP browser, `#/claims/CLM-1001` shows the story, the three items with amounts, the four documents, the Premium plan with its limits and the customer's one earlier claim
-- [ ] With the page open, `add_step` through the API appears on the page within three seconds without a reload
-- [ ] A claim the agent decided shows the outcome, the payout as `$420.00`, the reason and the policy section
-- [ ] On a claim awaiting sign-off: the pay button is disabled and says it needs a handler's sign-off; signing off as Dana Whitfield enables it; paying shows the claim paid, with the amount and the time
-- [ ] `#/instructions` shows the instructions and has no input, textarea or save button on the page
-- [ ] A claim id that does not exist shows a plain "claim not found" page, not a blank screen
+- [x] `npx vitest run --root dashboard --coverage` passes with statements at or above 80%
+- [x] In the Playwright MCP browser, `#/claims/CLM-1001` shows the story, the three items with amounts, the four documents, the Premium plan with its limits and the customer's one earlier claim
+- [x] With the page open, `add_step` through the API appears on the page within three seconds without a reload
+- [x] A claim the agent decided shows the outcome, the payout as `$420.00`, the reason and the policy section
+- [x] On a claim awaiting sign-off: the pay button is disabled and says it needs a handler's sign-off; signing off as Dana Whitfield enables it; paying shows the claim paid, with the amount and the time
+- [x] `#/instructions` shows the instructions and has no input, textarea or save button on the page
+- [x] A claim id that does not exist shows a plain "claim not found" page, not a blank screen
 
 ## Phase 6: end to end, and the hand-over
 
