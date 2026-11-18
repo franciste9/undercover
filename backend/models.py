@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 
 Outcome = Literal["approve", "decline", "refer"]
 
@@ -137,3 +137,34 @@ class Step(BaseModel):
 
 class Text(BaseModel):
     text: str
+
+
+class StartClaim(BaseModel):
+    thread_id: str
+
+
+class NewStep(BaseModel):
+    step: str
+
+
+class Decision(BaseModel):
+    outcome: Outcome
+    payout: float
+    reason: str
+    policy_section: str
+
+    @model_validator(mode="after")
+    def check_payout(self) -> "Decision":
+        if self.payout < 0:
+            raise ValueError("A payout cannot be negative")
+        if self.outcome != "approve" and self.payout != 0:
+            raise ValueError("Only an approved claim has a payout")
+        return self
+
+
+class SignOff(BaseModel):
+    handler_id: str
+
+
+class Payment(BaseModel):
+    amount: float

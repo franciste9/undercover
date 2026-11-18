@@ -115,17 +115,17 @@ The backend becomes the system of record for a claim's life, and the limit becom
 
 Each of these is a test as well as a command I run against a seeded database.
 
-- [ ] `POST /api/claims/CLM-1001/start` with `{"thread_id": "t1"}` leaves the claim `in_progress`; a second `start` returns 409
-- [ ] Two `add_step` calls then `GET /api/claims/CLM-1001/steps` returns both, oldest first, with timestamps
-- [ ] `POST /api/claims/CLM-1001/decision` with `approve`, `420`, a reason and `Section 3: Trip Delay` leaves the claim `decided` with `payout: 420`
-- [ ] `POST /api/claims/CLM-1001/payment` with `{"amount": 420}` sets `paid_amount` and `paid_at`; a second payment returns 409
-- [ ] `POST /api/claims/CLM-1002/payment` with an amount that is not the payout returns 409 and the claim stays unpaid
-- [ ] A decision of `approve` for `3750` on CLM-1003 leaves the claim `awaiting_signoff`; payment returns 409 saying it waits for a handler's sign-off
-- [ ] `POST /api/claims/CLM-1003/sign-off` with `{"handler_id": "HND-01"}` leaves it `decided`, and the payment of `3750` then succeeds
-- [ ] A payout of exactly `1000` pays without sign-off; `1000.01` does not
-- [ ] A decision of `decline` with a payout above zero returns 422, and paying a declined or referred claim returns 409
-- [ ] `stop_claim` on an `in_progress` claim returns it to `waiting`; on a decided claim it returns 409
-- [ ] `uv run pytest -q` passes with coverage at or above 80%
+- [x] `POST /api/claims/CLM-1001/start` with `{"thread_id": "t1"}` leaves the claim `in_progress`; a second `start` returns 409
+- [x] Two `add_step` calls then `GET /api/claims/CLM-1001/steps` returns both, oldest first, with timestamps
+- [x] `POST /api/claims/CLM-1001/decision` with `approve`, `420`, a reason and `Section 3: Trip Delay` leaves the claim `decided` with `payout: 420`
+- [x] `POST /api/claims/CLM-1001/payment` with `{"amount": 420}` sets `paid_amount` and `paid_at`; a second payment returns 409
+- [x] `POST /api/claims/CLM-1002/payment` with an amount that is not the payout returns 409 and the claim stays unpaid
+- [x] A decision of `approve` for `3750` on CLM-1003 leaves the claim `awaiting_signoff`; payment returns 409 saying it waits for a handler's sign-off
+- [x] `POST /api/claims/CLM-1003/sign-off` with `{"handler_id": "HND-01"}` leaves it `decided`, and the payment of `3750` then succeeds
+- [x] A payout of exactly `1000` pays without sign-off; `1000.01` does not
+- [x] A decision of `decline` with a payout above zero returns 422, and paying a declined or referred claim returns 409
+- [x] `stop_claim` on an `in_progress` claim returns it to `waiting`; on a decided claim it returns 409
+- [x] `uv run pytest -q` passes with coverage at or above 80%
 
 ## Phase 3: the UnderCover Agent
 

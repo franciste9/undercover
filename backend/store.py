@@ -2,6 +2,7 @@
 
 import json
 import sqlite3
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -10,10 +11,12 @@ from backend.models import (
     AddOn,
     Claim,
     Customer,
+    Decision,
     Handler,
     PlanLimits,
     Policy,
     QueueClaim,
+    Step,
     Trip,
 )
 
@@ -123,3 +126,106 @@ def list_handlers() -> list[Handler]:
 def policy_wording() -> str:
     """Return the policy wording."""
     return WORDING.read_text()
+
+
+def now() -> str:
+    """Return the current time as a timestamp."""
+    return datetime.now(UTC).isoformat(timespec="seconds")
+
+
+def get_handler(handler_id: str) -> Handler | None:
+    """Return one handler, or None when there is no such handler."""
+    with db.connection() as conn:
+        row = conn.execute(
+            "SELECT * FROM handlers WHERE handler_id = ?", (handler_id,)
+        ).fetchone()
+    return Handler(**dict(row)) if row else None
+
+
+def start(claim_id: str, thread_id: str) -> None:
+    """Put a claim in progress and clear what an earlier run left."""
+    with db.connection() as conn:
+        conn.execute(
+            """
+            UPDATE claims SET stage = 'in_progress', thread_id = ?, outcome = NULL,
+                payout = NULL, reason = NULL, policy_section = NULL, decided_at = NULL
+            WHERE claim_id = ?
+            """,
+            (thread_id, claim_id),
+        )
+        conn.execute("DELETE FROM steps WHERE claim_id = ?", (claim_id,))
+
+
+def stop(claim_id: str) -> None:
+    """Put a claim that is in progress back in the queue."""
+    with db.connection() as conn:
+        conn.execute(
+            "UPDATE claims SET stage = 'waiting' WHERE claim_id = ?", (claim_id,)
+        )
+
+
+def add_step(claim_id: str, step: str) -> Step:
+    """Record one line of what the agent is doing on a claim."""
+    with db.connection() as conn:
+        thread_id = conn.execute(
+            "SELECT thread_id FROM claims WHERE claim_id = ?", (claim_id,)
+        ).fetchone()["thread_id"]
+        cursor = conn.execute(
+            "INSERT INTO steps (claim_id, thread_id, at, step) VALUES (?, ?, ?, ?)",
+            (claim_id, thread_id, now(), step),
+        )
+        row = conn.execute(
+            "SELECT * FROM steps WHERE step_id = ?", (cursor.lastrowid,)
+        ).fetchone()
+    return Step(**dict(row))
+
+
+def list_steps(claim_id: str) -> list[Step]:
+    """Return what the agent did on a claim, oldest first."""
+    with db.connection() as conn:
+        rows = conn.execute(
+            "SELECT * FROM steps WHERE claim_id = ? ORDER BY step_id", (claim_id,)
+        ).fetchall()
+    return [Step(**dict(row)) for row in rows]
+
+
+def decide(claim_id: str, decision: Decision, stage: str) -> None:
+    """Record the agent's decision on a claim."""
+    with db.connection() as conn:
+        conn.execute(
+            """
+            UPDATE claims SET stage = ?, outcome = ?, payout = ?, reason = ?,
+                policy_section = ?, decided_at = ?
+            WHERE claim_id = ?
+            """,
+            (
+                stage,
+                decision.outcome,
+                decision.payout,
+                decision.reason,
+                decision.policy_section,
+                now(),
+                claim_id,
+            ),
+        )
+
+
+def sign_off(claim_id: str, handler_id: str) -> None:
+    """Record a handler's sign-off on a claim and finish it."""
+    with db.connection() as conn:
+        conn.execute(
+            """
+            UPDATE claims SET stage = 'decided', signed_off_by = ?, signed_off_at = ?
+            WHERE claim_id = ?
+            """,
+            (handler_id, now(), claim_id),
+        )
+
+
+def pay(claim_id: str, amount: float) -> None:
+    """Record the payment of a claim."""
+    with db.connection() as conn:
+        conn.execute(
+            "UPDATE claims SET paid_amount = ?, paid_at = ? WHERE claim_id = ?",
+            (amount, now(), claim_id),
+        )

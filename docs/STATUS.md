@@ -4,7 +4,10 @@ The pilot, built phase by phase from `docs/PLAN.md`.
 
 ## Built so far
 
-- `backend/`: SQLite behind FastAPI, seeded from `data/`. The read operations: `list_claims`, `get_claim`, `get_policy` (with its plan's limits and add-ons), `get_customer`, `get_policy_wording`, `list_handlers` and `health`.
+- `backend/`: SQLite behind FastAPI, seeded from `data/`.
+  - Reads: `list_claims`, `get_claim`, `get_policy` (with its plan's limits and add-ons), `get_customer`, `get_policy_wording`, `list_handlers`, `list_steps` and `health`.
+  - A claim's life: `start_claim`, `add_step`, `decide_claim`, `stop_claim`, `sign_off_claim`, `pay_claim`. The stages are `waiting`, `in_progress`, `awaiting_signoff` and `decided`.
+  - The rules: a payout over $1,000 waits for a handler's sign-off, a payment must equal the approved payout, and a claim pays once.
 - `agent/`: still the skeleton, `run(claim_id, thread_id)` with one tool.
 - `dashboard/`: still the one page that shows whether the backend is up.
 - `e2e/`: one test of that page.
