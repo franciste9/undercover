@@ -8,9 +8,10 @@ export default defineConfig({
   server: { proxy: { "/api": backend } },
   test: {
     environment: "jsdom",
+    setupFiles: ["src/test-setup.ts"],
     coverage: {
       include: ["src/**"],
-      exclude: ["src/main.tsx"],
+      exclude: ["src/main.tsx", "src/test-setup.ts"],
       thresholds: { statements: 80 },
     },
   },

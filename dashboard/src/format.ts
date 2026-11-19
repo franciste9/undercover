@@ -7,6 +7,13 @@ export const STAGES: Record<Stage, string> = {
   decided: "Decided",
 };
 
+export const STAGE_ORDER: Stage[] = [
+  "waiting",
+  "in_progress",
+  "awaiting_signoff",
+  "decided",
+];
+
 export const OUTCOMES: Record<Outcome, string> = {
   approve: "Approved",
   decline: "Declined",

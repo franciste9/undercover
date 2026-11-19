@@ -46,6 +46,10 @@ it("shows every claim with its stage and its money", async () => {
   ).toBeDefined();
   expect(within(row("CLM-1003")).getByText("$3,750.00")).toBeDefined();
   expect(within(row("CLM-1012")).getByText("Declined")).toBeDefined();
+
+  const summary = within(screen.getByLabelText("The queue by stage"));
+  expect(summary.getByText("Waiting for sign-off")).toBeDefined();
+  expect(summary.getByText("$3,800.00 claimed")).toBeDefined();
 });
 
 it("filters the queue by stage", async () => {
